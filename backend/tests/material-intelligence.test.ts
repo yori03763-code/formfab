@@ -105,8 +105,8 @@ describe('Material Intelligence Service', () => {
   // ============================================
   describe('calculateTotalPrice', () => {
     it('should calculate price for single part', () => {
-      const parts = [
-        { id: '1', name: 'Body', materialId: 6, volumeCm3: 30 }
+      const parts: any[] = [
+        { id: '1', name: 'Body', recommendedMaterial: 6, estimatedVolumeCm3: 30 }
       ];
       const selected = { '1': 6 };
       const total = calculateTotalPrice(parts, selected);
@@ -114,9 +114,9 @@ describe('Material Intelligence Service', () => {
     });
 
     it('should calculate price for multiple parts', () => {
-      const parts = [
-        { id: '1', name: 'Body', materialId: 6, volumeCm3: 30 },
-        { id: '2', name: 'Joints', materialId: 77, volumeCm3: 10 }
+      const parts: any[] = [
+        { id: '1', name: 'Body', recommendedMaterial: 6, estimatedVolumeCm3: 30 },
+        { id: '2', name: 'Joints', recommendedMaterial: 77, estimatedVolumeCm3: 10 }
       ];
       const selected = { '1': 6, '2': 77 };
       const total = calculateTotalPrice(parts, selected);
@@ -126,8 +126,8 @@ describe('Material Intelligence Service', () => {
     });
 
     it('should use selected material over recommended', () => {
-      const parts = [
-        { id: '1', name: 'Body', materialId: 6, volumeCm3: 30 }
+      const parts: any[] = [
+        { id: '1', name: 'Body', recommendedMaterial: 6, estimatedVolumeCm3: 30 }
       ];
       const selected1 = { '1': 6 }; // White Plastic
       const selected2 = { '1': 77 }; // Steel
