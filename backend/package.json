@@ -1,0 +1,27 @@
+{
+  "name": "formfab-backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@fastify/cors": "^9.0.0",
+    "@fastify/multipart": "^8.0.0",
+    "fastify": "^4.26.0",
+    "stripe": "^14.10.0",
+    "zod": "^3.22.0",
+    "@supabase/supabase-js": "^2.39.0",
+    "bullmq": "^5.1.0",
+    "ioredis": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0",
+    "tsx": "^4.7.0",
+    "vitest": "^1.2.0"
+  }
+}
