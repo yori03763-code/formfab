@@ -197,6 +197,14 @@ fastify.post('/api/pricing', async (request, reply) => {
     return reply.code(400).send({ error: 'materialId and volumeCm3 are required' });
   }
 
+  if (volumeCm3 <= 0) {
+    return reply.code(400).send({ error: 'volumeCm3 must be greater than 0' });
+  }
+
+  if (volumeCm3 > 10000) {
+    return reply.code(400).send({ error: 'volumeCm3 must be 10000 or less' });
+  }
+
   const priceCents = shapewaysService.calculateOrderPrice(materialId, volumeCm3);
   const shippingCents = 500;
   const totalCents = priceCents + shippingCents;
@@ -244,6 +252,17 @@ fastify.post('/api/calculate-price', async (request, reply) => {
 
   if (!parts || !selectedMaterials) {
     return reply.code(400).send({ error: 'parts and selectedMaterials are required' });
+  }
+
+  // Validate all parts
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    if (part.volumeCm3 <= 0) {
+      return reply.code(400).send({ error: `Part ${i}: volume must be greater than 0` });
+    }
+    if (part.volumeCm3 > 10000) {
+      return reply.code(400).send({ error: `Part ${i}: volume must be 10000 or less` });
+    }
   }
 
   try {

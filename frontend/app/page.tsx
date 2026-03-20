@@ -34,6 +34,27 @@ export default function Home() {
   const [scale, setScale] = useState(1.0);
   const [step, setStep] = useState<'prompt' | 'generating' | 'customize'>('prompt');
 
+  // Load parts from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('formfab-parts');
+      if (saved) {
+        try {
+          setParts(JSON.parse(saved));
+        } catch (e) {
+          console.error('Failed to load saved parts:', e);
+        }
+      }
+    }
+  }, []);
+
+  // Save parts to localStorage whenever they change
+  useEffect(() => {
+    if (typeof window !== 'undefined' && parts.length > 0) {
+      localStorage.setItem('formfab-parts', JSON.stringify(parts));
+    }
+  }, [parts]);
+
   useEffect(() => {
     if (!taskId) return;
     const ws = new WebSocket(`wss://dist-bridge-romantic-permits.trycloudflare.com/ws/generate/${taskId}`);
