@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-const BACKEND_URL = 'https://hang-carrier-preliminary-cat.trycloudflare.com';
+const BACKEND_URL = 'https://donations-tubes-converter-agents.trycloudflare.com';;
 
 const MATERIALS = [
   { id: 6, name: 'White Plastic', pricePerCm3: 0.15, description: 'Lightweight, affordable' },
@@ -57,7 +57,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!taskId) return;
-    const ws = new WebSocket(`wss://dist-bridge-romantic-permits.trycloudflare.com/ws/generate/${taskId}`);
+    const ws = new WebSocket(`wss://donations-tubes-converter-agents.trycloudflare.com/ws/generate/${taskId}`);
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === 'progress' || data.status) {
