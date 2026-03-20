@@ -1,151 +1,162 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+const BACKEND_URL = 'https://moss-occasion-bench-qualify.trycloudflare.com';
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [taskId, setTaskId] = useState<string | null>(null);
+  const [progress, setProgress] = useState(0);
+  const [status, setStatus] = useState<string>('pending');
   const [modelUrl, setModelUrl] = useState<string | null>(null);
+  const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // Connect to WebSocket when taskId changes
+  useEffect(() => {
+    if (!taskId) return;
+    
+    const wsUrl = `wss://moss-occasion-bench-qualify.trycloudflare.com/ws/generate/${taskId}`;
+    console.log('Connecting to WebSocket:', wsUrl);
+    const ws = new WebSocket(wsUrl);
+    
+    ws.onopen = () => console.log('WebSocket connected');
+    
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log('WebSocket message:', data);
+      
+      if (data.type === 'progress' || data.status) {
+        setProgress(data.progress || 0);
+        setStatus(data.status || 'processing');
+        if (data.modelUrl) setModelUrl(data.modelUrl);
+        if (data.thumbnailUrl) setThumbnailUrl(data.thumbnailUrl);
+        if (data.error) setError(data.error);
+        if (data.status === 'completed' || data.status === 'failed') setIsGenerating(false);
+      }
+    };
+    
+    ws.onerror = (e) => console.error('WebSocket error:', e);
+    ws.onclose = () => console.log('WebSocket closed');
+    
+    return () => ws.close();
+  }, [taskId]);
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
     
     setIsGenerating(true);
+    setProgress(0);
+    setStatus('pending');
+    setModelUrl(null);
+    setThumbnailUrl(null);
+    setError(null);
+    setTaskId(null);
     
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/generate/text`, {
+      const res = await fetch(`${BACKEND_URL}/api/generate/text`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt }),
       });
       
       const data = await res.json();
-      console.log('Generation started:', data);
-      // TODO: Poll for completion and show 3D viewer
-    } catch (error) {
-      console.error('Generation failed:', error);
-    } finally {
+      
+      if (data.error) {
+        setError(data.error);
+        setIsGenerating(false);
+      } else {
+        setTaskId(data.taskId);
+      }
+    } catch {
+      setError('Failed to connect to API');
       setIsGenerating(false);
     }
   };
 
+  const resetGenerator = () => {
+    setPrompt('');
+    setTaskId(null);
+    setProgress(0);
+    setStatus('pending');
+    setModelUrl(null);
+    setThumbnailUrl(null);
+    setError(null);
+    setIsGenerating(false);
+  };
+
   return (
-    <main className="min-h-screen">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 px-6 py-4 flex justify-between items-center backdrop-blur-lg bg-slate-900/80 border-b border-slate-800 z-50">
-        <div className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent">
-          FormFab
-        </div>
-        <div className="flex gap-4">
-          <button className="px-4 py-2 text-slate-400 hover:text-white transition">Gallery</button>
-          <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg transition">
-            Sign In
-          </button>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Describe it.
-            </span>
-            <br />
-            <span className="text-white">Print it. Ship it.</span>
-          </h1>
-          <p className="text-xl text-slate-400 mb-12 max-w-2xl mx-auto">
-            Transform your ideas into 3D-printed products. Just describe what you want, 
-            and we'll handle the rest — from AI generation to your doorstep.
-          </p>
-
-          {/* Generator Input */}
-          <div className="bg-slate-800/50 rounded-2xl p-8 border border-slate-700">
-            <div className="mb-6">
-              <label className="block text-left text-sm text-slate-400 mb-2">
-                What do you want to create?
-              </label>
-              <textarea
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                placeholder="A small figurine of a cat sitting on a book..."
-                className="w-full h-32 bg-slate-900/50 border border-slate-600 rounded-xl p-4 text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none resize-none"
-              />
-            </div>
-
-            <div className="flex gap-4 justify-center">
-              <button
-                onClick={handleGenerate}
-                disabled={isGenerating || !prompt.trim()}
-                className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-xl font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition"
-              >
-                {isGenerating ? (
-                  <span className="flex items-center gap-2">
-                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                    Generating...
-                  </span>
-                ) : (
-                  '✨ Generate 3D Model'
+    <>
+      <nav><div className="logo">FormFab</div></nav>
+      
+      <main>
+        <section className="hero">
+          <div className="badge">✨ AI-Powered 3D Printing</div>
+          <h1><span className="gradient">Describe it.</span><br/>Print it. Ship it.</h1>
+          <p>Transform your ideas into 3D-printed products. Just describe what you want, and we&apos;ll handle the rest.</p>
+          
+          <div className="generator">
+            {!modelUrl ? (
+              <>
+                <textarea
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  placeholder="A small figurine of a cat sitting on a book..."
+                  disabled={isGenerating}
+                />
+                <button onClick={handleGenerate} disabled={isGenerating || !prompt.trim()} className="btn-primary">
+                  {isGenerating ? '⏳ Generating...' : '✨ Generate 3D Model'}
+                </button>
+                
+                {isGenerating && (
+                  <div style={{ marginTop: '1.5rem' }}>
+                    <div style={{ width: '100%', height: '20px', background: 'rgba(99, 102, 241, 0.2)', borderRadius: '10px', overflow: 'hidden' }}>
+                      <div style={{ width: `${progress}%`, height: '100%', background: 'linear-gradient(90deg, #6366f1, #818cf8)', transition: 'width 0.3s' }}></div>
+                    </div>
+                    <p style={{ marginTop: '0.5rem', color: '#818cf8' }}>
+                      {progress}% - {status === 'processing' ? 'Creating 3D model...' : status}
+                    </p>
+                  </div>
                 )}
-              </button>
-            </div>
+                
+                {error && <p className="error" style={{ marginTop: '1rem' }}>❌ {error}</p>}
+              </>
+            ) : (
+              <div style={{ textAlign: 'center' }}>
+                <h3 style={{ marginBottom: '1rem', color: '#4ade80' }}>✅ 3D Model Ready!</h3>
+                {thumbnailUrl && <img src={thumbnailUrl} alt="Preview" style={{ width: '100%', maxWidth: '400px', borderRadius: '12px', marginBottom: '1rem' }} />}
+                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                  <a href={modelUrl} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none' }}>📥 Download Model (GLB)</a>
+                  <button onClick={resetGenerator} style={{ padding: '1rem 2rem', borderRadius: '12px', fontWeight: 600, border: '2px solid rgba(99, 102, 241, 0.5)', background: 'transparent', color: '#f1f5f9', cursor: 'pointer' }}>🔄 Generate Another</button>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="py-20 px-6 bg-slate-900/50">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-indigo-600/20 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
-                ✍️
-              </div>
-              <h3 className="text-xl font-semibold mb-2">1. Describe</h3>
-              <p className="text-slate-400">Tell us what you want in plain English. Be as creative as you like.</p>
-            </div>
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-purple-600/20 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
-                🎨
-              </div>
-              <h3 className="text-xl font-semibold mb-2">2. Preview</h3>
-              <p className="text-slate-400">Our AI generates a 3D model. Preview it, rotate it, make adjustments.</p>
-            </div>
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-pink-600/20 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
-                📦
-              </div>
-              <h3 className="text-xl font-semibold mb-2">3. Receive</h3>
-              <p className="text-slate-400">Choose your material, checkout, and we'll 3D print and ship to you.</p>
-            </div>
+        </section>
+        
+        <section className="section">
+          <h2>How It <span className="gradient">Works</span></h2>
+          <div className="steps">
+            <div className="step"><div className="step-icon">✍️</div><h3>1. Describe</h3><p>Tell us what you want.</p></div>
+            <div className="step"><div className="step-icon">🎨</div><h3>2. Preview</h3><p>AI generates a 3D model.</p></div>
+            <div className="step"><div className="step-icon">📦</div><h3>3. Receive</h3><p>We print and ship it.</p></div>
           </div>
-        </div>
-      </section>
-
-      {/* Materials Preview */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">Choose Your Material</h2>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {['White Plastic', 'Black Plastic', 'Metal', 'Ceramic', 'Full Color'].map((material) => (
-              <div key={material} className="bg-slate-800/50 rounded-xl p-4 text-center border border-slate-700 hover:border-indigo-500 cursor-pointer transition">
-                <div className="w-full aspect-square bg-gradient-to-br from-slate-600 to-slate-700 rounded-lg mb-3" />
-                <p className="font-medium">{material}</p>
-                <p className="text-sm text-slate-400">From $19</p>
-              </div>
-            ))}
+        </section>
+        
+        <section className="section">
+          <h2>Choose Your <span className="gradient">Material</span></h2>
+          <div className="materials">
+            <div className="material"><div className="material-swatch" style={{ background: '#f5f5f5' }}></div><div className="material-name">White Plastic</div><div className="material-price">From $19</div></div>
+            <div className="material"><div className="material-swatch" style={{ background: '#1a1a1a' }}></div><div className="material-name">Black Plastic</div><div className="material-price">From $22</div></div>
+            <div className="material"><div className="material-swatch" style={{ background: 'linear-gradient(135deg, #d4af37, #c0c0c0)' }}></div><div className="material-name">Metallic</div><div className="material-price">From $35</div></div>
+            <div className="material"><div className="material-swatch" style={{ background: 'linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1)' }}></div><div className="material-name">Full Color</div><div className="material-price">From $45</div></div>
           </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-8 px-6 border-t border-slate-800 text-center text-slate-500">
-        <p>Built with 💜 by <span className="text-pink-400">Lava ✨</span> for Yori & Jinx</p>
-      </footer>
-    </main>
+        </section>
+      </main>
+      
+      <footer>Built by <span>Lava ✨</span> for Yori & Jinx</footer>
+    </>
   );
 }
