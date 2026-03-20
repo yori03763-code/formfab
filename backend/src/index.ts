@@ -6,6 +6,7 @@ import websocket from '@fastify/websocket';
 import { ENV } from './env.js';
 import { meshyService } from './services/meshy.js';
 import { shapewaysService } from './services/shapeways.js';
+import { analyzeModel, calculateTotalPrice } from './services/material-intelligence.js';
 
 const fastify = Fastify({
   logger: true
@@ -208,6 +209,70 @@ fastify.post('/api/pricing', async (request, reply) => {
     totalCents,
     totalDollars: (totalCents / 100).toFixed(2),
   };
+});
+
+// =====================
+// Material Intelligence
+// =====================
+fastify.post('/api/analyze', async (request, reply) => {
+  const body = request.body as { prompt?: string };
+  const { prompt } = body;
+
+  if (!prompt || prompt.trim().length === 0) {
+    return reply.code(400).send({ error: 'Prompt is required' });
+  }
+
+  try {
+    const analysis = analyzeModel(prompt);
+    return {
+      success: true,
+      analysis,
+    };
+  } catch (error) {
+    request.log.error(error);
+    return reply.code(500).send({ error: 'Analysis failed' });
+  }
+});
+
+fastify.post('/api/calculate-price', async (request, reply) => {
+  const body = request.body as { 
+    parts?: Array<{ id: string; materialId: number; volumeCm3: number }>;
+    selectedMaterials?: Record<string, number>;
+  };
+  
+  const { parts, selectedMaterials } = body;
+
+  if (!parts || !selectedMaterials) {
+    return reply.code(400).send({ error: 'parts and selectedMaterials are required' });
+  }
+
+  try {
+    // Calculate price for each part
+    const partPrices = parts.map(part => {
+      const materialId = selectedMaterials[part.id] || 6;
+      const priceCents = shapewaysService.calculateOrderPrice(materialId, part.volumeCm3);
+      return {
+        partId: part.id,
+        materialId,
+        priceCents,
+      };
+    });
+
+    const subtotalCents = partPrices.reduce((sum, p) => sum + p.priceCents, 0);
+    const shippingCents = 500; // Flat rate
+    const totalCents = subtotalCents + shippingCents;
+
+    return {
+      partPrices,
+      subtotalCents,
+      shippingCents,
+      totalCents,
+      totalDollars: (totalCents / 100).toFixed(2),
+    };
+  } catch (error) {
+    request.log.error(error);
+    return reply.code(500).send({ error: 'Price calculation failed' });
+  }
 });
 
 // =====================
