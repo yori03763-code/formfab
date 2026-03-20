@@ -36,7 +36,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!taskId) return;
-    const ws = new WebSocket(`wss://armenia-emissions-pricing-havard.trycloudflare.com/ws/generate/${taskId}`);
+    const ws = new WebSocket(`wss://medicare-greeting-michigan-constraints.trycloudflare.com/ws/generate/${taskId}`);
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === 'progress' || data.status) {
