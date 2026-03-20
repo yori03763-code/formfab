@@ -1,59 +1,128 @@
 # Requirements — FormFab
 
-## v1 Requirements (MVP)
+## v1 Requirements (MVP) ✅ COMPLETE
 
 ### Generation
-- [ ] **GEN-01**: User can input text prompt describing 3D object (max 600 chars)
-- [ ] **GEN-02**: System initiates 3D generation via Meshy API
-- [ ] **GEN-03**: User sees real-time generation progress
-- [ ] **GEN-04**: User can preview generated 3D model in browser (rotate/zoom)
-- [ ] **GEN-05**: User can download generated model (GLB format)
-
-### Materials & Pricing
-- [ ] **MAT-01**: User can select from available printing materials
-- [ ] **MAT-02**: User sees material swatch and description
-- [ ] **MAT-03**: System calculates price based on material and size
-- [ ] **MAT-04**: User sees final price before checkout
-
-### Checkout & Orders
-- [ ] **PAY-01**: User can checkout via Stripe
-- [ ] **PAY-02**: System creates order after successful payment
-- [ ] **PAY-03**: User receives order confirmation
-- [ ] **PAY-04**: User can view order status
+- [x] **GEN-01**: User can input text prompt describing 3D object (max 600 chars)
+- [x] **GEN-02**: System initiates 3D generation via Meshy API
+- [x] **GEN-03**: User sees real-time generation progress via WebSocket
+- [x] **GEN-04**: User can preview generated 3D model thumbnail
+- [x] **GEN-05**: User can download generated model (GLB format)
 
 ### Infrastructure
-- [ ] **INF-01**: Frontend deployed and accessible via public URL
-- [ ] **INF-02**: Backend API running and healthy
-- [ ] **INF-03**: Database schema created
-- [ ] **INF-04**: All API keys stored securely in environment
+- [x] **INF-01**: Frontend deployed and accessible via public URL
+- [x] **INF-02**: Backend API running with WebSocket support
+- [x] **INF-03**: CORS configured for cross-origin requests
+- [x] **INF-04**: Meshy API key configured
 
 ---
 
-## v2 Requirements (Enhanced)
+## v2 Requirements (Intelligence Layer) - NEXT
 
-### Authentication
-- [ ] **AUTH-01**: User can create account with email/password
-- [ ] **AUTH-02**: User can login/logout
-- [ ] **AUTH-03**: User can view order history
+### Material Intelligence
+- [ ] **MAT-01**: AI analyzes generated 3D model structure
+- [ ] **MAT-02**: System identifies functional parts (body, joints, decorative)
+- [ ] **MAT-03**: System recommends optimal material per part
+- [ ] **MAT-04**: User sees material recommendation rationale
+- [ ] **MAT-05**: User can override AI recommendations
 
-### Image to 3D
-- [ ] **IMG-01**: User can upload image for 3D generation
-- [ ] **IMG-02**: System processes image via Meshy Image-to-3D API
+### Multi-Part Support
+- [ ] **MP-01**: System detects separable components
+- [ ] **MP-02**: System generates sub-models for each part
+- [ ] **MP-03**: User sees exploded view preview
+- [ ] **MP-04**: Price calculated per part
 
-### Fulfillment
-- [ ] **FUL-01**: System sends order to Shapeways automatically
-- [ ] **FUL-02**: User receives shipping notification
-- [ ] **FUL-03**: User can track shipment
+### Dimension Editor
+- [ ] **DIM-01**: User can adjust overall scale via slider
+- [ ] **DIM-02**: Real-time price updates on scale change
+- [ ] **DIM-03**: Reference objects shown (coin, phone, hand)
+- [ ] **DIM-04**: Dimension display in cm and inches
 
 ---
 
-## Out of Scope
+## v3 Requirements (AR Preview)
 
-1. **Custom model upload** — Too complex for MVP
-2. **Multi-material prints** — Adds UI complexity
-3. **Subscription plans** — v3
-4. **Public gallery** — v3
-5. **B2B API** — v3
+### Web AR
+- [ ] **AR-01**: iOS Quick Look support (USDZ export)
+- [ ] **AR-02**: Android Scene Viewer support (GLB)
+- [ ] **AR-03**: True-scale placement in user's space
+- [ ] **AR-04**: Model appears at realistic size
+
+### Material Preview
+- [ ] **AR-05**: User can swipe through material options
+- [ ] **AR-06**: Visual difference between materials shown
+- [ ] **AR-07**: Price displayed for each material option
+
+### Scale Confidence
+- [ ] **AR-08**: Place model next to reference objects
+- [ ] **AR-09**: Dimensions overlay on model
+- [ ] **AR-10**: "Fits in palm" / "Size of mug" indicators
+
+---
+
+## v4 Requirements (Assembly-Aware Manufacturing)
+
+### Sub-Model Generation
+- [ ] **ASM-01**: Automatic part separation
+- [ ] **ASM-02**: Export each part as separate file
+- [ ] **ASM-03**: Assign material to each part
+- [ ] **ASM-04**: Generate assembly diagram
+
+### Assembly Options
+- [ ] **ASM-05**: Kit option (user assembles, cheaper)
+- [ ] **ASM-06**: Pre-assembled option (premium)
+- [ ] **ASM-07**: Auto-generated assembly instructions
+- [ ] **ASM-08**: QR code linking to video tutorial
+
+### Manufacturing Pipeline
+- [ ] **ASM-09**: Multi-part orders sent to Shapeways
+- [ ] **ASM-10**: Track each part's manufacturing status
+- [ ] **ASM-11**: Consolidated shipping
+- [ ] **ASM-12**: Quality check before shipping
+
+---
+
+## v5 Requirements (Native AR App)
+
+### Mobile Apps
+- [ ] **APP-01**: iOS app with ARKit + RealityKit
+- [ ] **APP-02**: Android app with ARCore + Sceneform
+- [ ] **APP-03**: Push notifications for order updates
+- [ ] **APP-04**: Order history with 3D previews
+
+### Advanced AR
+- [ ] **APP-05**: Multi-material visualization
+- [ ] **APP-06**: Environment lighting adaptation
+- [ ] **APP-07**: Occlusion support
+- [ ] **APP-08**: Recording and sharing
+
+### Social Features
+- [ ] **APP-09**: Public gallery of creations
+- [ ] **APP-10**: Remix others' designs
+- [ ] **APP-11**: Social sharing with AR preview
+- [ ] **APP-12**: Community challenges
+
+---
+
+## v6 Requirements (Scale & Platform)
+
+### Developer API
+- [ ] **API-01**: REST API for embedding
+- [ ] **API-02**: Webhook notifications
+- [ ] **API-03**: White-label option
+- [ ] **API-04**: Usage-based pricing
+
+### B2B Features
+- [ ] **B2B-01**: Bulk ordering
+- [ ] **B2B-02**: Custom branding
+- [ ] **B2B-03**: Invoice/billing
+- [ ] **B2B-04**: Dedicated support
+
+### Advanced AI
+- [ ] **AI-01**: Style transfer for existing models
+- [ ] **AI-02**: Auto-rigging for posable figures
+- [ ] **AI-03**: Texture generation from text
+- [ ] **AI-04**: Print optimization (reduce waste)
 
 ---
 
@@ -61,20 +130,29 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| GEN-01 | 1 | Pending |
-| GEN-02 | 1 | Pending |
-| GEN-03 | 1 | Pending |
-| GEN-04 | 1 | Pending |
-| GEN-05 | 1 | Pending |
-| MAT-01 | 1 | Pending |
-| MAT-02 | 1 | Pending |
-| MAT-03 | 1 | Pending |
-| MAT-04 | 1 | Pending |
-| PAY-01 | 1 | Pending |
-| PAY-02 | 1 | Pending |
-| PAY-03 | 1 | Pending |
-| PAY-04 | 1 | Pending |
-| INF-01 | 1 | Pending |
-| INF-02 | 1 | Pending |
-| INF-03 | 1 | Pending |
-| INF-04 | 1 | Pending |
+| GEN-01 to GEN-05 | 1 | ✅ Complete |
+| INF-01 to INF-04 | 1 | ✅ Complete |
+| MAT-01 to MAT-05 | 2 | Pending |
+| MP-01 to MP-04 | 2 | Pending |
+| DIM-01 to DIM-04 | 2 | Pending |
+| AR-01 to AR-10 | 3 | Pending |
+| ASM-01 to ASM-12 | 4 | Pending |
+| APP-01 to APP-12 | 5 | Pending |
+| API-01 to AI-04 | 6 | Pending |
+
+---
+
+## Competitive Differentiation
+
+| Feature | Shapeways | Sculpteo | FormFab |
+|---------|-----------|----------|---------|
+| Multi-material per product | ❌ | ❌ | ✅ v2 |
+| AI material recommendation | ❌ | ❌ | ✅ v2 |
+| AR preview | ❌ | ❌ | ✅ v3 |
+| Assembly instructions | ❌ | ❌ | ✅ v4 |
+| Native AR app | ❌ | ❌ | ✅ v5 |
+| Developer API | Limited | Limited | ✅ v6 |
+
+---
+
+*Last updated: 2026-03-20*

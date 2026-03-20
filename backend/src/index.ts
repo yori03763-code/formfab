@@ -13,7 +13,7 @@ const fastify = Fastify({
 
 // Register plugins
 fastify.register(cors, {
-  origin: ENV.FRONTEND_URL
+  origin: true // Allow all origins for development
 });
 
 fastify.register(websocket);

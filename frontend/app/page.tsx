@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-const BACKEND_URL = 'https://moss-occasion-bench-qualify.trycloudflare.com';
+const BACKEND_URL = 'https://dns-dictionaries-troubleshooting-wildlife.trycloudflare.com';
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
@@ -18,7 +18,7 @@ export default function Home() {
   useEffect(() => {
     if (!taskId) return;
     
-    const wsUrl = `wss://moss-occasion-bench-qualify.trycloudflare.com/ws/generate/${taskId}`;
+    const wsUrl = `wss://senate-museums-highway-dinner.trycloudflare.com/ws/generate/${taskId}`;
     console.log('Connecting to WebSocket:', wsUrl);
     const ws = new WebSocket(wsUrl);
     
