@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import Toast from '@/components/Toast';
+import { ModelViewer } from '@/components/ModelViewer/ModelViewer';
 
 const BACKEND_URL = 'https://donations-tubes-converter-agents.trycloudflare.com';
 
