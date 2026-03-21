@@ -65,7 +65,7 @@ export function PartHighlight({
     const scale = explosionFactor * baseDistance;
     
     return direction.multiplyScalar(scale);
-  }, [explodedMode, explosionFactor, modelCenter, object, partIndex, totalParts]);
+  }, [explodedMode, explosionFactor, modelCenter, object, totalParts]);
 
   useFrame((state) => {
     if (meshRef.current) {

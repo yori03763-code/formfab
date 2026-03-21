@@ -113,7 +113,7 @@ export function MaterialRecommendation({
               {recommendation.materialName}
             </div>
             <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>
-              "{recommendation.rationale}"
+              &quot;{recommendation.rationale}&quot;
             </p>
             <button
               onClick={() => onSelectMaterial(recommendation.materialId)}
@@ -130,7 +130,7 @@ export function MaterialRecommendation({
                 cursor: 'pointer',
               }}
             >
-              {recommendation.materialId === currentMaterialId ? '✓ Currently Selected' : 'Use This Material'}
+              {recommendation.materialId === currentMaterialId ? '\u2713 Currently Selected' : 'Use This Material'}
             </button>
           </div>
 
