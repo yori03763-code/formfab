@@ -3,7 +3,8 @@
  * Generates step-by-step assembly instructions
  */
 
-import { FastifyInstance } from 'fastify';
+import Fastify from 'fastify';
+type FastifyInstance = Fastify.FastifyInstance;
 
 export interface AssemblyStep {
   number: number;

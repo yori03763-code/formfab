@@ -7,6 +7,8 @@ import { ENV } from './env.js';
 import { meshyService } from './services/meshy.js';
 import { shapewaysService } from './services/shapeways.js';
 import { analyzeModel, calculateTotalPrice } from './services/material-intelligence.js';
+import { aiRoutes } from './routes/ai.js';
+import { assemblyRoutes } from './routes/assembly.js';
 // import { authRoutes } from './routes/auth.js'; // Temporarily disabled
 
 const fastify = Fastify({
@@ -294,6 +296,12 @@ fastify.post('/api/calculate-price', async (request, reply) => {
     return reply.code(500).send({ error: 'Price calculation failed' });
   }
 });
+
+// Register AI routes
+fastify.register(aiRoutes);
+
+// Register assembly routes
+fastify.register(assemblyRoutes);
 
 // Register auth routes (temporarily disabled)
 // fastify.register(authRoutes);
