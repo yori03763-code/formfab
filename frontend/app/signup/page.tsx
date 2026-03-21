@@ -2,8 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
 
 export default function SignupPage() {
+  const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,11 +18,28 @@ export default function SignupPage() {
     setIsLoading(true);
     setError('');
 
-    // TODO: Implement actual auth
-    setTimeout(() => {
+    try {
+      // Sign up with Supabase
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name,
+          },
+        },
+      });
+
+      if (error) throw error;
+
+      if (data.user) {
+        // Redirect to dashboard (email confirmation may be required)
+        router.push('/dashboard');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to create account');
       setIsLoading(false);
-      window.location.href = '/dashboard';
-    }, 1000);
+    }
   };
 
   return (

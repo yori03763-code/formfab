@@ -2,8 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -14,12 +17,21 @@ export default function LoginPage() {
     setIsLoading(true);
     setError('');
 
-    // TODO: Implement actual auth
-    setTimeout(() => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
+      if (data.user) {
+        router.push('/dashboard');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to sign in');
       setIsLoading(false);
-      // For now, just redirect to dashboard
-      window.location.href = '/dashboard';
-    }, 1000);
+    }
   };
 
   return (
@@ -88,7 +100,7 @@ export default function LoginPage() {
                   border: '1px solid rgba(99, 102, 241, 0.3)',
                   borderRadius: '8px',
                   color: '#f1f5f9',
-                  fontSize: 1rem',
+                  fontSize: '1rem',
                 }}
                 placeholder="••••••••"
               />
