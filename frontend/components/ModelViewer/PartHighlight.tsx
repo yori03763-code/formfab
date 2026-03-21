@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -9,6 +9,12 @@ export interface PartHighlightProps {
   materialId: number;
   isSelected: boolean;
   isHovered: boolean;
+  xrayMode: boolean;
+  explodedMode: boolean;
+  explosionFactor: number;
+  modelCenter: THREE.Vector3;
+  partIndex: number;
+  totalParts: number;
   onSelect: () => void;
   onHover: (hovered: boolean) => void;
 }
@@ -27,6 +33,12 @@ export function PartHighlight({
   materialId,
   isSelected,
   isHovered,
+  xrayMode,
+  explodedMode,
+  explosionFactor,
+  modelCenter,
+  partIndex,
+  totalParts,
   onSelect,
   onHover,
 }: PartHighlightProps) {
@@ -35,10 +47,34 @@ export function PartHighlight({
 
   const visual = MATERIAL_VISUALS[materialId] || MATERIAL_VISUALS[6];
 
+  // Calculate explosion offset
+  const explosionOffset = useMemo(() => {
+    if (!explodedMode || explosionFactor === 0 || totalParts <= 1) {
+      return new THREE.Vector3(0, 0, 0);
+    }
+
+    // Get part's approximate center
+    const boundingBox = new THREE.Box3().setFromObject(object);
+    const partCenter = boundingBox.getCenter(new THREE.Vector3());
+    
+    // Calculate direction from model center
+    const direction = new THREE.Vector3().subVectors(partCenter, modelCenter).normalize();
+    
+    // Calculate offset based on part's distance from center and explosion factor
+    const baseDistance = 2; // Base explosion distance
+    const scale = explosionFactor * baseDistance;
+    
+    return direction.multiplyScalar(scale);
+  }, [explodedMode, explosionFactor, modelCenter, object, partIndex, totalParts]);
+
   useFrame((state) => {
     if (meshRef.current) {
+      // Apply explosion offset with smooth animation
+      const targetPosition = explosionOffset.clone();
+      meshRef.current.position.lerp(targetPosition, 0.1);
+
       // Pulse animation when selected
-      if (isSelected) {
+      if (isSelected && !explodedMode) {
         const scale = 1 + Math.sin(state.clock.elapsedTime * 3) * 0.02;
         meshRef.current.scale.set(scale, scale, scale);
       } else {
@@ -50,6 +86,17 @@ export function PartHighlight({
         (meshRef.current.material as THREE.MeshStandardMaterial).emissiveIntensity = 0.3;
       } else {
         (meshRef.current.material as THREE.MeshStandardMaterial).emissiveIntensity = 0;
+      }
+
+      // X-ray mode transparency
+      if (xrayMode) {
+        (meshRef.current.material as THREE.MeshStandardMaterial).transparent = true;
+        (meshRef.current.material as THREE.MeshStandardMaterial).opacity = 0.3;
+        (meshRef.current.material as THREE.MeshStandardMaterial).depthWrite = false;
+      } else {
+        (meshRef.current.material as THREE.MeshStandardMaterial).transparent = isSelected;
+        (meshRef.current.material as THREE.MeshStandardMaterial).opacity = isSelected ? 0.8 : 1.0;
+        (meshRef.current.material as THREE.MeshStandardMaterial).depthWrite = true;
       }
     }
   });
@@ -79,8 +126,9 @@ export function PartHighlight({
         color={visual.color}
         roughness={visual.roughness}
         metalness={visual.metalness}
-        transparent={isSelected}
-        opacity={isSelected ? 0.8 : 1}
+        transparent={xrayMode || isSelected}
+        opacity={xrayMode ? 0.3 : isSelected ? 0.8 : 1.0}
+        depthWrite={!xrayMode}
       />
     </primitive>
   );
