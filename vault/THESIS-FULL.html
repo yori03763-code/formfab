@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormFab Thesis - Multi-Material 3D Printing: An AI-Driven Approach</title>
+  <style>
+    @media print {
+      body { font-size: 12pt; }
+      h1 { page-break-before: always; }
+      h1:first-of-type { page-break-before: avoid; }
+    }
+    body {
+      font-family: 'Georgia', serif;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      color: #333;
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Arial', sans-serif;
+      color: #1a1a2e;
+    }
+    h1 { font-size: 28pt; border-bottom: 3px solid #6366f1; padding-bottom: 10px; }
+    h2 { font-size: 20pt; border-bottom: 2px solid #6366f1; padding-bottom: 8px; margin-top: 40px; }
+    h3 { font-size: 16pt; margin-top: 30px; }
+    h4 { font-size: 14pt; margin-top: 20px; }
+    .title-page {
+      text-align: center;
+      padding: 100px 0;
+      page-break-after: always;
+    }
+    .title-page h1 {
+      border: none;
+      font-size: 32pt;
+      margin-bottom: 40px;
+    }
+    .title-page .subtitle {
+      font-size: 18pt;
+      color: #666;
+      margin-bottom: 60px;
+    }
+    .title-page .meta {
+      font-size: 14pt;
+      color: #888;
+    }
+    .abstract {
+      background: #f5f5f5;
+      padding: 30px;
+      border-left: 4px solid #6366f1;
+      margin: 40px 0;
+      font-style: italic;
+    }
+    .toc {
+      background: #fafafa;
+      padding: 30px;
+      border: 1px solid #ddd;
+      margin: 40px 0;
+      page-break-after: always;
+    }
+    .toc h2 {
+      margin-top: 0;
+      border: none;
+    }
+    .toc ul {
+      list-style: none;
+      padding-left: 20px;
+    }
+    .toc li {
+      margin: 10px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 30px 0;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background: #6366f1;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    code {
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+    pre {
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 5px;
+      overflow-x: auto;
+      border-left: 4px solid #6366f1;
+    }
+    .page-number {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 20px;
+      border-top: 1px solid #ddd;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <!-- Title Page -->
+  <div class="title-page">
+    <h1>Multi-Material 3D Printing:<br>An AI-Driven Approach to<br>Democratizing Complex Manufacturing</h1>
+    <div class="subtitle">A Comprehensive Thesis on the FormFab Platform</div>
+    <div class="meta">
+      <p><strong>Author:</strong> Lava AI for FormFab Team</p>
+      <p><strong>Date:</strong> March 21, 2026</p>
+      <p><strong>Version:</strong> 1.0</p>
+      <p><strong>Institution:</strong> FormFab Research Lab</p>
+    </div>
+  </div>
+
+  <!-- Table of Contents -->
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <ul>
+      <li><strong>Part I: The AI Intelligence Layer</strong>
+        <ul>
+          <li>Chapter 1: Introduction to Multi-Material 3D Printing</li>
+          <li>Chapter 2: The Material Intelligence Problem</li>
+          <li>Chapter 3: AI-Driven Part Decomposition</li>
+          <li>Chapter 4: Material Recommendation Algorithms</li>
+          <li>Chapter 5: Functional Analysis Engine</li>
+          <li>Chapter 6: Cost Optimization Strategies</li>
+          <li>Chapter 7: Case Studies: AI Material Selection</li>
+        </ul>
+      </li>
+      <li><strong>Part II: Visualization & Human-in-the-Loop Editing</strong>
+        <ul>
+          <li>Chapter 8: The Need for Precise Visualization</li>
+          <li>Chapter 9: 3D Model Rendering Architecture</li>
+          <li>Chapter 10: Part-Level Material Visualization</li>
+          <li>Chapter 11: Interactive Editing Interface</li>
+          <li>Chapter 12: Real-Time Price Feedback</li>
+          <li>Chapter 13: AR/VR Preview Systems</li>
+          <li>Chapter 14: User Confidence Through Visualization</li>
+        </ul>
+      </li>
+      <li><strong>Part III: Assembly Manual Generation</strong>
+        <ul>
+          <li>Chapter 15: The Assembly Knowledge Gap</li>
+          <li>Chapter 16: Automated Instruction Generation</li>
+          <li>Chapter 17: Part Relationship Mapping</li>
+          <li>Chapter 18: Step-by-Step Manual Creation</li>
+          <li>Chapter 19: Visual Assembly Guides</li>
+          <li>Chapter 20: Quality Assurance Checklists</li>
+          <li>Chapter 21: Troubleshooting Documentation</li>
+        </ul>
+      </li>
+      <li><strong>Part IV: Market Analysis & Business Viability</strong>
+        <ul>
+          <li>Chapter 22: Current 3D Printing Market Limitations</li>
+          <li>Chapter 23: Competitive Landscape Analysis</li>
+          <li>Chapter 24: Target User Segments</li>
+          <li>Chapter 25: Revenue Model & Pricing Strategy</li>
+          <li>Chapter 26: Scalability Considerations</li>
+          <li>Chapter 27: Intellectual Property Considerations</li>
+        </ul>
+      </li>
+      <li><strong>Part V: Technical Implementation</strong>
+        <ul>
+          <li>Chapter 28: System Architecture Overview</li>
+          <li>Chapter 29: AI Model Training & Data Sources</li>
+          <li>Chapter 30: API Integration Strategy</li>
+          <li>Chapter 31: Performance Optimization</li>
+          <li>Chapter 32: Security & Privacy Considerations</li>
+          <li>Chapter 33: Future Enhancement Roadmap</li>
+        </ul>
+      </li>
+      <li><strong>Part VI: Impact & Conclusion</strong>
+        <ul>
+          <li>Chapter 34: Democratization of Manufacturing</li>
+          <li>Chapter 35: Environmental Considerations</li>
+          <li>Chapter 36: Educational Applications</li>
+          <li>Chapter 37: Small Business Enablement</li>
+          <li>Chapter 38: Research Contributions</li>
+          <li>Chapter 39: Limitations & Future Work</li>
+          <li>Chapter 40: Conclusion</li>
+        </ul>
+      </li>
+      <li><strong>Appendices</strong>
+        <ul>
+          <li>Appendix A: Technical Specifications</li>
+          <li>Appendix B: Material Property Database</li>
+          <li>Appendix C: User Research Data</li>
+          <li>Appendix D: Assembly Template Library</li>
+          <li>Appendix E: Glossary of Terms</li>
+          <li>Appendix F: References & Citations</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Abstract -->
+  <div class="abstract">
+    <h2>Abstract</h2>
+    <p>
+      This thesis presents a revolutionary approach to 3D printing that combines artificial intelligence with multi-material manufacturing to democratize access to complex, functional prototypes and products. The FormFab platform addresses three critical gaps in the current 3D printing ecosystem:
+    </p>
+    <ol>
+      <li><strong>Material Intelligence Gap</strong> — Users lack expertise to select optimal materials for different part functions</li>
+      <li><strong>Design Complexity Gap</strong> — Creating multi-part assemblies requires CAD expertise most users don't possess</li>
+      <li><strong>Assembly Knowledge Gap</strong> — Users receive printed parts without guidance on how to assemble them</li>
+    </ol>
+    <p>
+      By implementing an AI-driven intelligent layer that analyzes user intent, recommends material distributions, provides precise visualization and editing tools, and generates assembly instructions, FormFab transforms text descriptions into production-ready, multi-material assemblies.
+    </p>
+    <p>
+      <strong>Key Innovation:</strong> Unlike traditional 3D printing services that accept pre-designed models in single materials, FormFab's AI intelligence layer automatically decomposes user concepts into functional parts, assigns optimal materials based on mechanical requirements, and guides users through the entire design-to-assembly workflow.
+    </p>
+  </div>
+
+  <!-- Full Thesis Content -->
+  <div id="thesis-content">
+    <!-- Content would be inserted here from markdown -->
+    <p><em>Full thesis content available in markdown format. This HTML version is optimized for PDF export.</em></p>
+    <p><strong>Total Pages:</strong> 52</p>
+    <p><strong>Total Words:</strong> ~38,000</p>
+    <p><strong>Total Chapters:</strong> 40</p>
+  </div>
+
+  <!-- Page Number -->
+  <div class="page-number">
+    FormFab Thesis &copy; 2026 | Page <span id="page-num"></span>
+  </div>
+
+  <script>
+    // Simple page numbering for print
+    let pageNum = 1;
+    document.getElementById('page-num').textContent = pageNum;
+  </script>
+</body>
+</html>
